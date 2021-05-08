@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <com.example.expandabletext.ExpandableTextView2
+        android:id="@+id/etv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="32dp"
+        android:background="#22999999"
+        android:padding="12dp"
+        android:text="@string/poem_0"
+        android:textSize="12dp"
+        app:etv_MaxLinesOnShrink="3"/>
+
+    <com.example.expandabletext.ExplandableTextView
+        android:id="@+id/expland_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:gravity="left" />
+
+</LinearLayout>
