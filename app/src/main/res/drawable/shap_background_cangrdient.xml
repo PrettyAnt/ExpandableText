@@ -3,14 +3,9 @@
     <!--渐隐效果-->
     <gradient
         android:angle="270"
-        android:startColor="#33FFFFFF"
         android:centerColor="#D9FFFFFF"
-        android:endColor="#FFFFFFFF" />
-<!--    <gradient-->
-<!--        android:angle="270"-->
-<!--        android:startColor="#FFFFFFFF"-->
-<!--        android:centerColor="#FFFFFFFF"-->
-<!--        android:endColor="#FFFFFFFF" />-->
+        android:endColor="#FFFFFFFF"
+        android:startColor="#33FFFFFF" />
     <corners
         android:topLeftRadius="8dp"
         android:topRightRadius="8dp" />

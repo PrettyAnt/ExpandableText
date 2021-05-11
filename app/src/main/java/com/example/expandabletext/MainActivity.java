@@ -1,12 +1,10 @@
 package com.example.expandabletext;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
-
-public class MainActivity extends AppCompatActivity implements ExplandableTextView.OnExplandClickListener {
+public class MainActivity extends AppCompatActivity {
 
     private ExpandableTextView2 etv;
     private ExplandableTextView explandTextView;
@@ -23,14 +21,6 @@ public class MainActivity extends AppCompatActivity implements ExplandableTextVi
         explandTextView = findViewById(R.id.expland_textview);
         String string = getResources().getString(R.string.poem_0);
         explandTextView.setText(string);
-
-//        explandTextView.setHalfText(string);
-        explandTextView.setOnExplandClickListener(this);
     }
 
-    @Override
-    public void onExpland(View view) {
-//        String string = getResources().getString(R.string.poem_0);
-//        explandTextView.setText(string);
-    }
 }
