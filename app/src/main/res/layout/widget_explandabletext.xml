@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:lineSpacingMultiplier="@dimen/lineSpacSize"
-        android:text="@string/poem_0"
+        android:text="失败"
         android:textColor="@color/black"
         android:textSize="12sp" />
 

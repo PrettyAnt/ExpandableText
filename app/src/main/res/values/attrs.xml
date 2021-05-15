@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Sxd_ExplandTextView">
+        <attr name="sxd_text" format="string" />
+        <attr name="sxd_heigh" format="dimension" />
+    </declare-styleable>
+</resources>

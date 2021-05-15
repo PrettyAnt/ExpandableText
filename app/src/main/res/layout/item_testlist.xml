@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/spdb_chat_margin"
+    android:layout_marginRight="@dimen/spdb_chat_margin"
+    android:minWidth="80dp"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/spdb_chat_innermargin"
+    android:paddingRight="@dimen/spdb_chat_innermargin"
+    android:paddingBottom="@dimen/spdb_chat_innermargin">
+
+    <com.example.expandabletext.demo.ExpandableTextViews
+        android:id="@+id/etv_text_accept"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:visibility="gone" />
+
+    <com.example.expandabletext.ExplandableTextView
+        android:id="@+id/etv_sxd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible" />
+
+
+    <View
+        android:id="@+id/v_line_mul"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/spdb_paragraph_margn"
+        android:background="#F3F4F7" />
+
+    <TextView
+        android:id="@+id/tv_text_menucomtext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spdb_paragraph_margn"
+        android:lineSpacingMultiplier="@dimen/lineSpacSize"
+        android:text="建议问/相关问提示话术"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+
+</LinearLayout>

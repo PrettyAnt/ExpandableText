@@ -3,16 +3,19 @@ package com.example.expandabletext;
 /**
  * Created by Carbs.Wang on 2016/7/16.
  * website: https://github.com/Carbs0126/
- *
+ * <p>
  * Thanks to :
- *  1.ReadMoreTextView
- *      https://github.com/borjabravo10/ReadMoreTextView
- *  2.TouchableSpan
- *      http://stackoverflow.com/questions
- *          /20856105/change-the-text-color-of-a-single-clickablespan-when-pressed-without-affecting-o
- *  3.FlatUI
- *      http://www.bootcss.com/p/flat-ui/
+ * 1.ReadMoreTextView
+ * https://github.com/borjabravo10/ReadMoreTextView
+ * 2.TouchableSpan
+ * http://stackoverflow.com/questions
+ * /20856105/change-the-text-color-of-a-single-clickablespan-when-pressed-without-affecting-o
+ * 3.FlatUI
+ * http://www.bootcss.com/p/flat-ui/
+ *
+ * 原始版本
  */
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
@@ -34,48 +37,48 @@ import android.widget.TextView;
 
 import java.lang.reflect.Field;
 
-public class ExpandableTextViewOrigin extends androidx.appcompat.widget.AppCompatTextView{
+public class ExpandableTextViewOrigin extends androidx.appcompat.widget.AppCompatTextView {
 
     public static final int STATE_SHRINK = 0;
     public static final int STATE_EXPAND = 1;
 
-    private static final String CLASS_NAME_VIEW = "android.view.View";
-    private static final String CLASS_NAME_LISTENER_INFO = "android.view.View$ListenerInfo";
-    private static final String ELLIPSIS_HINT = "..";
-    private static final String GAP_TO_EXPAND_HINT = " ";
-    private static final String GAP_TO_SHRINK_HINT = " ";
-    private static final int MAX_LINES_ON_SHRINK = 2;
-    private static final int TO_EXPAND_HINT_COLOR = 0xFF3498DB;
-    private static final int TO_SHRINK_HINT_COLOR = 0xFFE74C3C;
-    private static final int TO_EXPAND_HINT_COLOR_BG_PRESSED = 0x55999999;
-    private static final int TO_SHRINK_HINT_COLOR_BG_PRESSED = 0x55999999;
-    private static final boolean TOGGLE_ENABLE = true;
-    private static final boolean SHOW_TO_EXPAND_HINT = true;
-    private static final boolean SHOW_TO_SHRINK_HINT = true;
+    private static final String  CLASS_NAME_VIEW                 = "android.view.View";
+    private static final String  CLASS_NAME_LISTENER_INFO        = "android.view.View$ListenerInfo";
+    private static final String  ELLIPSIS_HINT                   = "..";
+    private static final String  GAP_TO_EXPAND_HINT              = " ";
+    private static final String  GAP_TO_SHRINK_HINT              = " ";
+    private static final int     MAX_LINES_ON_SHRINK             = 2;
+    private static final int     TO_EXPAND_HINT_COLOR            = 0xFF3498DB;
+    private static final int     TO_SHRINK_HINT_COLOR            = 0xFFE74C3C;
+    private static final int     TO_EXPAND_HINT_COLOR_BG_PRESSED = 0x55999999;
+    private static final int     TO_SHRINK_HINT_COLOR_BG_PRESSED = 0x55999999;
+    private static final boolean TOGGLE_ENABLE                   = true;
+    private static final boolean SHOW_TO_EXPAND_HINT             = true;
+    private static final boolean SHOW_TO_SHRINK_HINT             = true;
 
-    private String mEllipsisHint;
-    private String mToExpandHint;
-    private String mToShrinkHint;
-    private String mGapToExpandHint = GAP_TO_EXPAND_HINT;
-    private String mGapToShrinkHint = GAP_TO_SHRINK_HINT;
-    private boolean mToggleEnable = TOGGLE_ENABLE;
-    private boolean mShowToExpandHint = SHOW_TO_EXPAND_HINT;
-    private boolean mShowToShrinkHint = SHOW_TO_SHRINK_HINT;
-    private int mMaxLinesOnShrink = MAX_LINES_ON_SHRINK;
-    private int mToExpandHintColor = TO_EXPAND_HINT_COLOR;
-    private int mToShrinkHintColor = TO_SHRINK_HINT_COLOR;
-    private int mToExpandHintColorBgPressed = TO_EXPAND_HINT_COLOR_BG_PRESSED;
-    private int mToShrinkHintColorBgPressed = TO_SHRINK_HINT_COLOR_BG_PRESSED;
-    private int mCurrState = STATE_SHRINK;
+    private String  mEllipsisHint;
+    private String  mToExpandHint;
+    private String  mToShrinkHint;
+    private String  mGapToExpandHint            = GAP_TO_EXPAND_HINT;
+    private String  mGapToShrinkHint            = GAP_TO_SHRINK_HINT;
+    private boolean mToggleEnable               = TOGGLE_ENABLE;
+    private boolean mShowToExpandHint           = SHOW_TO_EXPAND_HINT;
+    private boolean mShowToShrinkHint           = SHOW_TO_SHRINK_HINT;
+    private int     mMaxLinesOnShrink           = MAX_LINES_ON_SHRINK;
+    private int     mToExpandHintColor          = TO_EXPAND_HINT_COLOR;
+    private int     mToShrinkHintColor          = TO_SHRINK_HINT_COLOR;
+    private int     mToExpandHintColorBgPressed = TO_EXPAND_HINT_COLOR_BG_PRESSED;
+    private int     mToShrinkHintColorBgPressed = TO_SHRINK_HINT_COLOR_BG_PRESSED;
+    private int     mCurrState                  = STATE_SHRINK;
 
     //  used to add to the tail of modified text, the "shrink" and "expand" text
     private TouchableSpan mTouchableSpan;
-    private BufferType mBufferType = BufferType.NORMAL;
-    private TextPaint mTextPaint;
-    private Layout mLayout;
-    private int mTextLineCount = -1;
-    private int mLayoutWidth = 0;
-    private int mFutureTextViewWidth = 0;
+    private BufferType    mBufferType          = BufferType.NORMAL;
+    private TextPaint     mTextPaint;
+    private Layout        mLayout;
+    private int           mTextLineCount       = -1;
+    private int           mLayoutWidth         = 0;
+    private int           mFutureTextViewWidth = 0;
 
     //  the original text of this view
     private CharSequence mOrigText;
@@ -83,7 +86,7 @@ public class ExpandableTextViewOrigin extends androidx.appcompat.widget.AppCompa
     //  used to judge if the listener of corresponding to the onclick event of ExpandableTextView2
     //  is specifically for inner toggle
     private ExpandableClickListener mExpandableClickListener;
-    private OnExpandListener mOnExpandListener;
+    private OnExpandListener        mOnExpandListener;
 
     public ExpandableTextViewOrigin(Context context) {
         super(context);
@@ -92,13 +95,13 @@ public class ExpandableTextViewOrigin extends androidx.appcompat.widget.AppCompa
 
     public ExpandableTextViewOrigin(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initAttr(context,attrs);
+        initAttr(context, attrs);
         init();
     }
 
     public ExpandableTextViewOrigin(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initAttr(context,attrs);
+        initAttr(context, attrs);
         init();
     }
 
@@ -115,31 +118,31 @@ public class ExpandableTextViewOrigin extends androidx.appcompat.widget.AppCompa
             int attr = a.getIndex(i);
             if (attr == R.styleable.ExpandableTextView_etv_MaxLinesOnShrink) {
                 mMaxLinesOnShrink = a.getInteger(attr, MAX_LINES_ON_SHRINK);
-            }else if (attr == R.styleable.ExpandableTextView_etv_EllipsisHint){
+            } else if (attr == R.styleable.ExpandableTextView_etv_EllipsisHint) {
                 mEllipsisHint = a.getString(attr);
-            }else if (attr == R.styleable.ExpandableTextView_etv_ToExpandHint) {
+            } else if (attr == R.styleable.ExpandableTextView_etv_ToExpandHint) {
                 mToExpandHint = a.getString(attr);
-            }else if (attr == R.styleable.ExpandableTextView_etv_ToShrinkHint) {
+            } else if (attr == R.styleable.ExpandableTextView_etv_ToShrinkHint) {
                 mToShrinkHint = a.getString(attr);
-            }else if (attr == R.styleable.ExpandableTextView_etv_EnableToggle) {
+            } else if (attr == R.styleable.ExpandableTextView_etv_EnableToggle) {
                 mToggleEnable = a.getBoolean(attr, TOGGLE_ENABLE);
-            }else if (attr == R.styleable.ExpandableTextView_etv_ToExpandHintShow){
+            } else if (attr == R.styleable.ExpandableTextView_etv_ToExpandHintShow) {
                 mShowToExpandHint = a.getBoolean(attr, SHOW_TO_EXPAND_HINT);
-            }else if (attr == R.styleable.ExpandableTextView_etv_ToShrinkHintShow){
+            } else if (attr == R.styleable.ExpandableTextView_etv_ToShrinkHintShow) {
                 mShowToShrinkHint = a.getBoolean(attr, SHOW_TO_SHRINK_HINT);
-            }else if (attr == R.styleable.ExpandableTextView_etv_ToExpandHintColor){
+            } else if (attr == R.styleable.ExpandableTextView_etv_ToExpandHintColor) {
                 mToExpandHintColor = a.getInteger(attr, TO_EXPAND_HINT_COLOR);
-            }else if (attr == R.styleable.ExpandableTextView_etv_ToShrinkHintColor){
+            } else if (attr == R.styleable.ExpandableTextView_etv_ToShrinkHintColor) {
                 mToShrinkHintColor = a.getInteger(attr, TO_SHRINK_HINT_COLOR);
-            }else if (attr == R.styleable.ExpandableTextView_etv_ToExpandHintColorBgPressed){
+            } else if (attr == R.styleable.ExpandableTextView_etv_ToExpandHintColorBgPressed) {
                 mToExpandHintColorBgPressed = a.getInteger(attr, TO_EXPAND_HINT_COLOR_BG_PRESSED);
-            }else if (attr == R.styleable.ExpandableTextView_etv_ToShrinkHintColorBgPressed){
+            } else if (attr == R.styleable.ExpandableTextView_etv_ToShrinkHintColorBgPressed) {
                 mToShrinkHintColorBgPressed = a.getInteger(attr, TO_SHRINK_HINT_COLOR_BG_PRESSED);
-            }else if (attr == R.styleable.ExpandableTextView_etv_InitState){
+            } else if (attr == R.styleable.ExpandableTextView_etv_InitState) {
                 mCurrState = a.getInteger(attr, STATE_SHRINK);
-            }else if (attr == R.styleable.ExpandableTextView_etv_GapToExpandHint){
+            } else if (attr == R.styleable.ExpandableTextView_etv_GapToExpandHint) {
                 mGapToExpandHint = a.getString(attr);
-            }else if (attr == R.styleable.ExpandableTextView_etv_GapToShrinkHint){
+            } else if (attr == R.styleable.ExpandableTextView_etv_GapToShrinkHint) {
                 mGapToShrinkHint = a.getString(attr);
             }
         }
@@ -149,16 +152,16 @@ public class ExpandableTextViewOrigin extends androidx.appcompat.widget.AppCompa
     private void init() {
         mTouchableSpan = new TouchableSpan();
         setMovementMethod(new LinkTouchMovementMethod());
-        if(TextUtils.isEmpty(mEllipsisHint)) {
+        if (TextUtils.isEmpty(mEllipsisHint)) {
             mEllipsisHint = ELLIPSIS_HINT;
         }
-        if(TextUtils.isEmpty(mToExpandHint)){
+        if (TextUtils.isEmpty(mToExpandHint)) {
             mToExpandHint = getResources().getString(R.string.to_expand_hint);
         }
-        if(TextUtils.isEmpty(mToShrinkHint)){
+        if (TextUtils.isEmpty(mToShrinkHint)) {
             mToShrinkHint = getResources().getString(R.string.to_shrink_hint);
         }
-        if(mToggleEnable){
+        if (mToggleEnable) {
             mExpandableClickListener = new ExpandableClickListener();
             setOnClickListener(mExpandableClickListener);
         }
@@ -174,63 +177,61 @@ public class ExpandableTextViewOrigin extends androidx.appcompat.widget.AppCompa
 
     /**
      * used in ListView or RecyclerView to update ExpandableTextView2
-     * @param text
-     *          original text
-     * @param futureTextViewWidth
-     *          the width of ExpandableTextView2 in px unit,
-     *          used to get max line number of original text by given the width
-     * @param expandState
-     *          expand or shrink
+     *
+     * @param text                original text
+     * @param futureTextViewWidth the width of ExpandableTextView2 in px unit,
+     *                            used to get max line number of original text by given the width
+     * @param expandState         expand or shrink
      */
-    public void updateForRecyclerView(CharSequence text, int futureTextViewWidth, int expandState){
+    public void updateForRecyclerView(CharSequence text, int futureTextViewWidth, int expandState) {
         mFutureTextViewWidth = futureTextViewWidth;
         mCurrState = expandState;
         setText(text);
     }
 
-    public void updateForRecyclerView(CharSequence text, BufferType type, int futureTextViewWidth){
+    public void updateForRecyclerView(CharSequence text, BufferType type, int futureTextViewWidth) {
         mFutureTextViewWidth = futureTextViewWidth;
         setText(text, type);
     }
 
-    public void updateForRecyclerView(CharSequence text, int futureTextViewWidth){
+    public void updateForRecyclerView(CharSequence text, int futureTextViewWidth) {
         mFutureTextViewWidth = futureTextViewWidth;
         setText(text);
     }
 
     /**
      * get the current state of ExpandableTextView2
-     * @return
-     *      STATE_SHRINK if in shrink state
-     *      STATE_EXPAND if in expand state
+     *
+     * @return STATE_SHRINK if in shrink state
+     * STATE_EXPAND if in expand state
      */
-    public int getExpandState(){
+    public int getExpandState() {
         return mCurrState;
     }
 
     /**
      * refresh and get a will-be-displayed text by current configuration
-     * @return
-     *      get a will-be-displayed text
+     *
+     * @return get a will-be-displayed text
      */
-    private CharSequence getNewTextByConfig(){
-        if(TextUtils.isEmpty(mOrigText)){
+    private CharSequence getNewTextByConfig() {
+        if (TextUtils.isEmpty(mOrigText)) {
             return mOrigText;
         }
 
         mLayout = getLayout();
-        if(mLayout != null){
+        if (mLayout != null) {
             mLayoutWidth = mLayout.getWidth();
         }
 
-        if(mLayoutWidth <= 0){
-            if(getWidth() == 0) {
+        if (mLayoutWidth <= 0) {
+            if (getWidth() == 0) {
                 if (mFutureTextViewWidth == 0) {
                     return mOrigText;
                 } else {
                     mLayoutWidth = mFutureTextViewWidth - getPaddingLeft() - getPaddingRight();
                 }
-            }else{
+            } else {
                 mLayoutWidth = getWidth() - getPaddingLeft() - getPaddingRight();
             }
         }
@@ -238,7 +239,7 @@ public class ExpandableTextViewOrigin extends androidx.appcompat.widget.AppCompa
         mTextPaint = getPaint();
 
         mTextLineCount = -1;
-        switch (mCurrState){
+        switch (mCurrState) {
             case STATE_SHRINK: {
                 mLayout = new DynamicLayout(mOrigText, mTextPaint, mLayoutWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
                 mTextLineCount = mLayout.getLineCount();
@@ -246,7 +247,7 @@ public class ExpandableTextViewOrigin extends androidx.appcompat.widget.AppCompa
                 if (mTextLineCount <= mMaxLinesOnShrink) {
                     return mOrigText;
                 }
-                int indexEnd = getValidLayout().getLineEnd(mMaxLinesOnShrink - 1);
+                int indexEnd   = getValidLayout().getLineEnd(mMaxLinesOnShrink - 1);
                 int indexStart = getValidLayout().getLineStart(mMaxLinesOnShrink - 1);
                 int indexEndTrimmed = indexEnd
                         - getLengthOfString(mEllipsisHint)
@@ -264,7 +265,7 @@ public class ExpandableTextViewOrigin extends androidx.appcompat.widget.AppCompa
                 int indexEndTrimmedRevised = indexEndTrimmed;
                 if (remainWidth > widthTailReplaced) {
                     int extraOffset = 0;
-                    int extraWidth = 0;
+                    int extraWidth  = 0;
                     while (remainWidth > widthTailReplaced + extraWidth) {
                         extraOffset++;
                         if (indexEndTrimmed + extraOffset <= mOrigText.length()) {
@@ -277,7 +278,7 @@ public class ExpandableTextViewOrigin extends androidx.appcompat.widget.AppCompa
                     indexEndTrimmedRevised += extraOffset - 1;
                 } else {
                     int extraOffset = 0;
-                    int extraWidth = 0;
+                    int extraWidth  = 0;
                     while (remainWidth + extraWidth < widthTailReplaced) {
                         extraOffset--;
                         if (indexEndTrimmed + extraOffset > indexStart) {
@@ -325,25 +326,25 @@ public class ExpandableTextViewOrigin extends androidx.appcompat.widget.AppCompa
         return text;
     }
 
-    public void setExpandListener(OnExpandListener listener){
+    public void setExpandListener(OnExpandListener listener) {
         mOnExpandListener = listener;
     }
 
-    private Layout getValidLayout(){
+    private Layout getValidLayout() {
         return mLayout != null ? mLayout : getLayout();
     }
 
-    private void toggle(){
-        switch (mCurrState){
+    private void toggle() {
+        switch (mCurrState) {
             case STATE_SHRINK:
                 mCurrState = STATE_EXPAND;
-                if(mOnExpandListener != null){
+                if (mOnExpandListener != null) {
                     mOnExpandListener.onExpand(this);
                 }
                 break;
             case STATE_EXPAND:
                 mCurrState = STATE_SHRINK;
-                if(mOnExpandListener != null){
+                if (mOnExpandListener != null) {
                     mOnExpandListener.onShrink(this);
                 }
                 break;
@@ -358,30 +359,31 @@ public class ExpandableTextViewOrigin extends androidx.appcompat.widget.AppCompa
         setTextInternal(getNewTextByConfig(), type);
     }
 
-    private void setTextInternal(CharSequence text, BufferType type){
+    private void setTextInternal(CharSequence text, BufferType type) {
         super.setText(text, type);
     }
 
-    private int getLengthOfString(String string){
+    private int getLengthOfString(String string) {
         if (string == null) {
             return 0;
         }
         return string.length();
     }
 
-    private String getContentOfString(String string){
+    private String getContentOfString(String string) {
         if (string == null) {
             return "";
         }
         return string;
     }
 
-    public interface OnExpandListener{
+    public interface OnExpandListener {
         void onExpand(ExpandableTextViewOrigin view);
+
         void onShrink(ExpandableTextViewOrigin view);
     }
 
-    private class ExpandableClickListener implements OnClickListener{
+    private class ExpandableClickListener implements OnClickListener {
         @Override
         public void onClick(View view) {
             toggle();
@@ -389,7 +391,7 @@ public class ExpandableTextViewOrigin extends androidx.appcompat.widget.AppCompa
     }
 
     public OnClickListener getOnClickListener(View view) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             return getOnClickListenerV14(view);
         } else {
             return getOnClickListenerV(view);
@@ -412,8 +414,8 @@ public class ExpandableTextViewOrigin extends androidx.appcompat.widget.AppCompa
     private OnClickListener getOnClickListenerV14(View view) {
         OnClickListener retrievedListener = null;
         try {
-            Field listenerField = Class.forName(CLASS_NAME_VIEW).getDeclaredField("mListenerInfo");
-            Object listenerInfo = null;
+            Field  listenerField = Class.forName(CLASS_NAME_VIEW).getDeclaredField("mListenerInfo");
+            Object listenerInfo  = null;
 
             if (listenerField != null) {
                 listenerField.setAccessible(true);
@@ -436,22 +438,23 @@ public class ExpandableTextViewOrigin extends androidx.appcompat.widget.AppCompa
 
     /**
      * Copy from:
-     *  http://stackoverflow.com/questions
-     *  /20856105/change-the-text-color-of-a-single-clickablespan-when-pressed-without-affecting-o
+     * http://stackoverflow.com/questions
+     * /20856105/change-the-text-color-of-a-single-clickablespan-when-pressed-without-affecting-o
      * By:
-     *  Steven Meliopoulos
+     * Steven Meliopoulos
      */
     private class TouchableSpan extends ClickableSpan {
         private boolean mIsPressed;
+
         public void setPressed(boolean isSelected) {
             mIsPressed = isSelected;
         }
 
         @Override
         public void onClick(View widget) {
-            if(hasOnClickListeners()
+            if (hasOnClickListeners()
                     && (getOnClickListener(ExpandableTextViewOrigin.this) instanceof ExpandableClickListener)) {
-            }else{
+            } else {
                 toggle();
             }
         }
@@ -459,7 +462,7 @@ public class ExpandableTextViewOrigin extends androidx.appcompat.widget.AppCompa
         @Override
         public void updateDrawState(TextPaint ds) {
             super.updateDrawState(ds);
-            switch (mCurrState){
+            switch (mCurrState) {
                 case STATE_SHRINK:
                     ds.setColor(mToExpandHintColor);
                     ds.bgColor = mIsPressed ? mToExpandHintColorBgPressed : 0;
@@ -475,10 +478,10 @@ public class ExpandableTextViewOrigin extends androidx.appcompat.widget.AppCompa
 
     /**
      * Copy from:
-     *  http://stackoverflow.com/questions
-     *  /20856105/change-the-text-color-of-a-single-clickablespan-when-pressed-without-affecting-o
+     * http://stackoverflow.com/questions
+     * /20856105/change-the-text-color-of-a-single-clickablespan-when-pressed-without-affecting-o
      * By:
-     *  Steven Meliopoulos
+     * Steven Meliopoulos
      */
     public class LinkTouchMovementMethod extends LinkMovementMethod {
         private TouchableSpan mPressedSpan;
@@ -522,11 +525,11 @@ public class ExpandableTextViewOrigin extends androidx.appcompat.widget.AppCompa
             y += textView.getScrollY();
 
             Layout layout = textView.getLayout();
-            int line = layout.getLineForVertical(y);
-            int off = layout.getOffsetForHorizontal(line, x);
+            int    line   = layout.getLineForVertical(y);
+            int    off    = layout.getOffsetForHorizontal(line, x);
 
-            TouchableSpan[] link = spannable.getSpans(off, off, TouchableSpan.class);
-            TouchableSpan touchedSpan = null;
+            TouchableSpan[] link        = spannable.getSpans(off, off, TouchableSpan.class);
+            TouchableSpan   touchedSpan = null;
             if (link.length > 0) {
                 touchedSpan = link[0];
             }

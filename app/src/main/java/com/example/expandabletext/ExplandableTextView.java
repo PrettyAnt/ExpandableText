@@ -6,6 +6,7 @@ import android.text.Layout;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ import android.widget.TextView;
  * <p>
  * Created on 12:12 PM  11/05/21
  * PackageName : com.example.expandabletext
- * describle :
+ * describle : 升级版
  */
 public class ExplandableTextView extends RelativeLayout implements View.OnClickListener {
     public static final int                 STATE_SHRINK         = 0;
@@ -42,8 +43,9 @@ public class ExplandableTextView extends RelativeLayout implements View.OnClickL
     private             DynamicLayout       dynamicLayout;
     private             TextView            tvExplandshrink;
     private             ImageView           ivArrow;
-    private             boolean             canShrink            = true;//true 展开后可以收起,false 展开后可以收起
+    private             boolean             canShrink            = false;//true 展开后可以收起,false 展开后可以收起
     private             boolean             canGradient          = true;//true 可以渐变,false 不可以渐变
+    private             int                 position;
 
     public ExplandableTextView(Context context) {
         super(context);
@@ -63,6 +65,7 @@ public class ExplandableTextView extends RelativeLayout implements View.OnClickL
 
     public void init(Context context, AttributeSet attrs, int defStyleAttr) {
         this.context = context;
+
         View inflate = LayoutInflater
                 .from(context)
                 .inflate(R.layout.widget_explandabletext, this, true);
@@ -92,6 +95,40 @@ public class ExplandableTextView extends RelativeLayout implements View.OnClickL
         tv_show.setText(text, type);
     }
 
+
+    /**
+     * 获取textView的高度
+     *
+     * @param textView
+     * @return
+     */
+    private int getTextViewHeight(TextView textView) {
+        Layout layout = textView.getLayout();
+        if (layout == null) {
+            return 0;
+        }
+        int desired = layout.getLineTop(textView.getLineCount());
+        int padding = textView.getCompoundPaddingTop() +
+                textView.getCompoundPaddingBottom();
+        return desired + padding;
+    }
+
+    private Layout getValidLayout() {
+        return dynamicLayout != null ? dynamicLayout : tv_show.getLayout();
+    }
+
+    /**
+     * 设置显示全部
+     *
+     * @param text
+     */
+    public void setText(String text) {
+        tv_show.setText(text);
+        mOrigText = text;
+        setTextInternal(getNewTextByConfig(), mBufferType);
+    }
+
+
     private CharSequence getNewTextByConfig() {
         if (TextUtils.isEmpty(mOrigText)) {
             return mOrigText;
@@ -114,87 +151,49 @@ public class ExplandableTextView extends RelativeLayout implements View.OnClickL
         paint = tv_show.getPaint();
         switch (mCurrState) {
             case STATE_SHRINK:
-                dynamicLayout = new DynamicLayout(mOrigText, paint, layoutWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
-                int lineCount = dynamicLayout.getLineCount();
-                if (lineCount <= mMaxLinesOnShrink) {
-                    gapView.setVisibility(GONE);
-                    return mOrigText;
-                }
-                //缩略后的计算最后一行的首尾 索引
-                int indexEnd = getValidLayout().getLineEnd(mMaxLinesOnShrink - 1);
-                return mOrigText.subSequence(0, indexEnd);
-            case STATE_EXPAND:
-                return mOrigText;
-        }
-
-
-        return mOrigText;
-    }
-
-    /**
-     * 获取textView的高度
-     *
-     * @param textView
-     * @return
-     */
-    private int getTextViewHeight(TextView textView) {
-        Layout layout  = textView.getLayout();
-        int    desired = layout.getLineTop(textView.getLineCount());
-        int padding = textView.getCompoundPaddingTop() +
-                textView.getCompoundPaddingBottom();
-        return desired + padding;
-    }
-
-    private Layout getValidLayout() {
-        return dynamicLayout != null ? dynamicLayout : tv_show.getLayout();
-    }
-
-    /**
-     * 设置显示全部
-     *
-     * @param text
-     */
-    public void setText(String text) {
-        tv_show.setText(text);
-        mOrigText = text;
-        setTextInternal(getNewTextByConfig(), mBufferType);
-    }
-
-
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        super.onLayout(changed, l, t, r, b);
-
-        if (mMaxLinesOnShrink > tv_show.getLineCount()) {
-            ll_loadmore.setVisibility(GONE);
-            return;
-        }
-        switch (mCurrState) {
-            case STATE_SHRINK:
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) ll_loadmore.getLayoutParams();
-                layoutParams.topMargin = -getTextViewHeight(tv_show) / mMaxLinesOnShrink;
-                ll_loadmore.setLayoutParams(layoutParams);
-                ViewGroup.LayoutParams gapShrinkParams = gapView.getLayoutParams();
-                gapShrinkParams.height = getTextViewHeight(tv_show) / mMaxLinesOnShrink;
-                gapView.setLayoutParams(gapShrinkParams);
                 tvExplandshrink.setText("展开");
                 ivArrow.setImageResource(R.drawable.arrow_expland);
-                break;
-            case STATE_EXPAND:
-                if (!canShrink) {//如果不能收起,则直接隐藏
+                dynamicLayout = new DynamicLayout(mOrigText, paint, layoutWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+                int lineCount = dynamicLayout.getLineCount();
+                //recyclerview的复用问题,所以if else一定要成对,如果遇到if直接 return,将可能会导致出现下一个view使用的是上一个if中的高度
+                if (lineCount <= mMaxLinesOnShrink) {
                     ll_loadmore.setVisibility(GONE);
-                    return;
+                    Log.e("prettyant", "当前位置 :   " + position + "     || " + mOrigText);
+                    return mOrigText;
+                } else {
+                    ll_loadmore.setVisibility(VISIBLE);
+                    LayoutParams layoutParams = (LayoutParams) ll_loadmore.getLayoutParams();
+                    layoutParams.topMargin = -getTextViewHeight(tv_show) / mMaxLinesOnShrink;
+                    ll_loadmore.setLayoutParams(layoutParams);
+                    ViewGroup.LayoutParams gapShrinkParams = gapView.getLayoutParams();
+                    gapShrinkParams.height = getTextViewHeight(tv_show) / mMaxLinesOnShrink;
+                    gapView.setLayoutParams(gapShrinkParams);
+                    tvExplandshrink.setText("展开");
+                    ivArrow.setImageResource(R.drawable.arrow_expland);
+
+                    //缩略后的计算最后一行的首尾 索引
+                    int indexEnd = getValidLayout().getLineEnd(mMaxLinesOnShrink - 1);
+                    Log.w("prettyant", "当前位置 :   " + position + "     || " + mOrigText);
+                    return mOrigText.subSequence(0, indexEnd);
                 }
-                RelativeLayout.LayoutParams layoutParams2 = (RelativeLayout.LayoutParams) ll_loadmore.getLayoutParams();
+            case STATE_EXPAND:
+                tvExplandshrink.setText("收起");
+                LayoutParams layoutParams2 = (LayoutParams) ll_loadmore.getLayoutParams();
                 layoutParams2.topMargin = 0;
                 ll_loadmore.setLayoutParams(layoutParams2);
                 ViewGroup.LayoutParams gapExpandParams = gapView.getLayoutParams();
                 gapExpandParams.height = 0;
                 gapView.setLayoutParams(gapExpandParams);
-                tvExplandshrink.setText("收起");
+
                 ivArrow.setImageResource(R.drawable.arrow_shrink);
-                break;
+                Log.i("prettyant", "当前位置 :   " + position + "     || " + mOrigText);
+                if (!canShrink) {//如果不能收起,则直接隐藏
+                    ll_loadmore.setVisibility(GONE);
+                }
+                return mOrigText;
         }
+
+        return mOrigText;
     }
 
 
@@ -203,20 +202,44 @@ public class ExplandableTextView extends RelativeLayout implements View.OnClickL
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.ll_loadmore) {
-            mCurrState = (mCurrState == STATE_SHRINK ? STATE_EXPAND : STATE_SHRINK);
-            setTextInternal(getNewTextByConfig(), mBufferType);
             if (onExplandClickListener != null) {
-                onExplandClickListener.onExpland(ll_loadmore);
+                toggle();
             }
         }
     }
 
-    public interface OnExplandClickListener {
-        void onExpland(View view);
+    private void toggle() {
+        mCurrState = mCurrState == STATE_EXPAND ? STATE_SHRINK : STATE_EXPAND;
+        onExplandClickListener.onExpand(this, mCurrState == STATE_EXPAND, position);
+        setTextInternal(getNewTextByConfig(), mBufferType);
     }
 
-    public void setOnExplandClickListener(OnExplandClickListener onExplandClickListener) {
+    /**
+     * 点击展开、收起的监听
+     */
+    public interface OnExplandClickListener {
+        void onExpand(View view, boolean expland, int position);
+    }
+
+    public void setOnExplandClickListener(OnExplandClickListener onExplandClickListener, int position) {
         this.onExplandClickListener = onExplandClickListener;
+        this.position = position;
+    }
+
+    /**
+     * used in ListView or RecyclerView to update ExpandableTextViews
+     *
+     * @param text                original text
+     * @param futureTextViewWidth the width of ExpandableTextViews in px unit,
+     *                            used to get max line number of original text by given the width
+     * @param expandState         expand or shrink
+     */
+    public void updateForRecyclerView(CharSequence text, int futureTextViewWidth, int expandState) {
+        mOrigText = text;
+        mFutureTextViewWidth = futureTextViewWidth;
+        mCurrState = expandState;
+        CharSequence newTextByConfig = getNewTextByConfig();
+        tv_show.setText(newTextByConfig);
     }
 
     /**

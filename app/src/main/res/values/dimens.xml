@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="lineSpacSize">1.25</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="spdb_chat_innermargin">20dp</dimen>
+    <dimen name="spdb_chat_margin">20dp</dimen>
+    <dimen name="spdb_chatitem_space">20dp</dimen>
+    <dimen name="spdb_paragraph_margn">20dp</dimen>
 </resources>
