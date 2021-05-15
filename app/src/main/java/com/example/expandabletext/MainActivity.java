@@ -43,12 +43,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String string = getResources().getString(R.string.poem_0);
 
         explandTextView.setText(string);
-//        explandTextView.setOnExplandClickListener(new ExplandableTextView.OnExplandClickListener() {
-//            @Override
-//            public void onExpland(View view, int position, boolean ispland) {
-//
-//            }
-//        },0);
         btnAdd = findViewById(R.id.btn_add);
         btnSkip = findViewById(R.id.btn_skip);
 
