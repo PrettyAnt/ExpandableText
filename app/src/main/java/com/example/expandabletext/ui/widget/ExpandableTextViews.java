@@ -1,4 +1,4 @@
-package com.example.expandabletext.demo;
+package com.example.expandabletext.ui.widget;
 
 /**
  * Created by Carbs.Wang on 2016/7/16.

@@ -25,7 +25,7 @@
             android:id="@+id/v_gap"
             android:layout_width="match_parent"
             android:layout_height="12sp"
-            android:background="@drawable/shap_background_cangrdient"/>
+            android:background="#E6FF0000"/>
 
         <TextView
             android:id="@+id/tv_explandshrink"

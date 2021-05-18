@@ -1,8 +1,7 @@
-package com.example.expandabletext.demo;
+package com.example.expandabletext.ui.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.expandabletext.R;
 import com.example.expandabletext.model.TestData;
+import com.example.expandabletext.ui.widget.ExpandableTextViews;
 
 import java.util.ArrayList;
 import java.util.List;

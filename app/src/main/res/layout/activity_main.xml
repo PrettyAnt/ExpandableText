@@ -5,16 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".ui.activity.MainActivity">
 
 
-    <com.example.expandabletext.ExplandableTextView
-        android:id="@+id/expland_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:gravity="left"
-        android:visibility="gone" />
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -41,6 +35,14 @@
             android:layout_toStartOf="@+id/btn_skip"
             android:layout_marginEnd="10dp"
             android:text="添加数据" />
+        <Button
+            android:id="@+id/btn_skip_plus"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/btn_add"
+            android:layout_marginEnd="10dp"
+            android:text="进阶版"/>
     </RelativeLayout>
 
 

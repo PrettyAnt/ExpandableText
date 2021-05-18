@@ -1,4 +1,4 @@
-package com.example.expandabletext;
+package com.example.expandabletext.ui.widget;
 
 /**
  * Created by Carbs.Wang on 2016/7/16.
@@ -34,6 +34,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
+
+import com.example.expandabletext.R;
 
 import java.lang.reflect.Field;
 

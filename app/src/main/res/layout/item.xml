@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.example.expandabletext.demo.ExpandableTextViews
+    <com.example.expandabletext.ui.widget.ExpandableTextViews
         android:id="@+id/etv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

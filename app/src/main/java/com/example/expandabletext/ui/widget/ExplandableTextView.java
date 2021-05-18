@@ -1,4 +1,4 @@
-package com.example.expandabletext;
+package com.example.expandabletext.ui.widget;
 
 import android.content.Context;
 import android.text.DynamicLayout;
@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.expandabletext.R;
+
 
 /**
  * @author chenyu
@@ -23,7 +25,7 @@ import android.widget.TextView;
  * <p>
  * Created on 12:12 PM  11/05/21
  * PackageName : com.example.expandabletext
- * describle : 升级版
+ * describle :
  */
 public class ExplandableTextView extends RelativeLayout implements View.OnClickListener {
     public static final int                 STATE_SHRINK         = 0;
@@ -43,7 +45,7 @@ public class ExplandableTextView extends RelativeLayout implements View.OnClickL
     private             DynamicLayout       dynamicLayout;
     private             TextView            tvExplandshrink;
     private             ImageView           ivArrow;
-    private             boolean             canShrink            = false;//true 展开后可以收起,false 展开后可以收起
+    private             boolean             canShrink            = true;//true 展开后可以收起,false 展开后可以收起
     private             boolean             canGradient          = true;//true 可以渐变,false 不可以渐变
     private             int                 position;
 
@@ -151,33 +153,37 @@ public class ExplandableTextView extends RelativeLayout implements View.OnClickL
         paint = tv_show.getPaint();
         switch (mCurrState) {
             case STATE_SHRINK:
+                LayoutParams layoutParams = (LayoutParams) ll_loadmore.getLayoutParams();
+                layoutParams.topMargin = -getTextViewHeight(tv_show) / mMaxLinesOnShrink;
+                ll_loadmore.setLayoutParams(layoutParams);
+
+                ViewGroup.LayoutParams gapShrinkParams = gapView.getLayoutParams();
+                gapShrinkParams.height = getTextViewHeight(tv_show) / mMaxLinesOnShrink;
+                gapView.setLayoutParams(gapShrinkParams);
                 tvExplandshrink.setText("展开");
+                if (canGradient) {
+                    gapView.setBackgroundResource(R.drawable.shap_background_cangrdient);
+                } else {
+                    gapView.setBackgroundResource(R.drawable.shap_background_normal);
+                }
                 ivArrow.setImageResource(R.drawable.arrow_expland);
+
                 dynamicLayout = new DynamicLayout(mOrigText, paint, layoutWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
                 int lineCount = dynamicLayout.getLineCount();
                 //recyclerview的复用问题,所以if else一定要成对,如果遇到if直接 return,将可能会导致出现下一个view使用的是上一个if中的高度
                 if (lineCount <= mMaxLinesOnShrink) {
                     ll_loadmore.setVisibility(GONE);
-                    Log.e("prettyant", "当前位置 :   " + position + "     || " + mOrigText);
+                    Log.v("ttt", "当前位置 :   " + position + "     || " + mOrigText);
                     return mOrigText;
                 } else {
                     ll_loadmore.setVisibility(VISIBLE);
-                    LayoutParams layoutParams = (LayoutParams) ll_loadmore.getLayoutParams();
-                    layoutParams.topMargin = -getTextViewHeight(tv_show) / mMaxLinesOnShrink;
-                    ll_loadmore.setLayoutParams(layoutParams);
-                    ViewGroup.LayoutParams gapShrinkParams = gapView.getLayoutParams();
-                    gapShrinkParams.height = getTextViewHeight(tv_show) / mMaxLinesOnShrink;
-                    gapView.setLayoutParams(gapShrinkParams);
-                    tvExplandshrink.setText("展开");
-                    ivArrow.setImageResource(R.drawable.arrow_expland);
-
                     //缩略后的计算最后一行的首尾 索引
                     int indexEnd = getValidLayout().getLineEnd(mMaxLinesOnShrink - 1);
-                    Log.w("prettyant", "当前位置 :   " + position + "     || " + mOrigText);
+                    Log.w("ttt", "当前位置 :   " + position + "     || " + mOrigText);
                     return mOrigText.subSequence(0, indexEnd);
                 }
             case STATE_EXPAND:
-                tvExplandshrink.setText("收起");
+                tvExplandshrink.setText("折叠");
                 LayoutParams layoutParams2 = (LayoutParams) ll_loadmore.getLayoutParams();
                 layoutParams2.topMargin = 0;
                 ll_loadmore.setLayoutParams(layoutParams2);
@@ -186,7 +192,7 @@ public class ExplandableTextView extends RelativeLayout implements View.OnClickL
                 gapView.setLayoutParams(gapExpandParams);
 
                 ivArrow.setImageResource(R.drawable.arrow_shrink);
-                Log.i("prettyant", "当前位置 :   " + position + "     || " + mOrigText);
+                Log.i("ttt", "当前位置 :   " + position + "     || " + mOrigText);
                 if (!canShrink) {//如果不能收起,则直接隐藏
                     ll_loadmore.setVisibility(GONE);
                 }

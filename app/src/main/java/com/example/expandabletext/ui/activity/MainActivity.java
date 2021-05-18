@@ -1,4 +1,4 @@
-package com.example.expandabletext;
+package com.example.expandabletext.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,23 +9,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.expandabletext.adapter.ExplandableAdapter;
-import com.example.expandabletext.demo.ActivityListView;
-import com.example.expandabletext.demo.ExpandableTextViews;
+import com.example.expandabletext.R;
+import com.example.expandabletext.ui.adapter.ExplandableAdapter;
+import com.example.expandabletext.ui.widget.ExpandableTextViews;
 import com.example.expandabletext.model.TestData;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, ExpandableTextViews.OnExpandListener, ExplandableTextView.OnExplandClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ExpandableTextViews.OnExpandListener {
 
-    private ExplandableTextView explandTextView;
-    private ArrayList<TestData> testDataList = new ArrayList<TestData>();
+    private ArrayList<TestData>                                                   testDataList = new ArrayList<TestData>();
     private Button btnAdd;
     private Button btnSkip;
     private String[] stringArray;
     private ExplandableAdapter explandableAdapter;
     private RecyclerView recyclerView;
+    private Button btn_skip_plus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +39,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private boolean mIspland = false;
     private void initView() {
-        explandTextView = findViewById(R.id.expland_textview);
-        String string = getResources().getString(R.string.poem_0);
 
-        explandTextView.setText(string);
         btnAdd = findViewById(R.id.btn_add);
         btnSkip = findViewById(R.id.btn_skip);
+        btn_skip_plus = findViewById(R.id.btn_skip_plus);
+
 
         recyclerView = findViewById(R.id.recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -53,9 +52,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setAdapter(explandableAdapter);
 
         explandableAdapter.setOnExpandListener(this);
-        explandableAdapter.setOnExplandClickListener(this);
         btnAdd.setOnClickListener(this);
         btnSkip.setOnClickListener(this);
+        btn_skip_plus.setOnClickListener(this);
 
 
 
@@ -82,6 +81,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v.getId() == R.id.btn_skip) {
             Intent intent = new Intent(this, ActivityListView.class);
             startActivity(intent);
+        } else if (v.getId() == R.id.btn_skip_plus) {
+            Intent intent = new Intent(this, SecondActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -89,10 +91,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onExpand(ExpandableTextViews view, boolean expland, int position) {
         testDataList.get(position).setExpland(expland);
 
-    }
-
-    @Override
-    public void onExpand(View view, boolean expland, int position) {
-        testDataList.get(position).setExpland(expland);
     }
 }

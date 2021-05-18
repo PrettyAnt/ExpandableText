@@ -10,14 +10,14 @@
     android:paddingRight="@dimen/spdb_chat_innermargin"
     android:paddingBottom="@dimen/spdb_chat_innermargin">
 
-    <com.example.expandabletext.demo.ExpandableTextViews
+    <com.example.expandabletext.ui.widget.ExpandableTextViews
         android:id="@+id/etv_text_accept"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left"
         android:visibility="gone" />
 
-    <com.example.expandabletext.ExplandableTextView
+    <com.example.expandabletext.ui.widget.ExplandableTextView
         android:id="@+id/etv_sxd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
